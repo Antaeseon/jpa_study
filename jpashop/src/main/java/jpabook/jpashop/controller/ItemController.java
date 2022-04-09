@@ -65,21 +65,27 @@ public class ItemController {
     }
 
     /**
-     * 유저가 권한 있는지 확인 필요
+     * 유저가 권한 있는지 확인 필
      */
     @PostMapping("items/{itemId}/edit")
-    public String updateItemForm(@PathVariable String itemId, @ModelAttribute("form") BookForm form) {
+    public String updateItemForm(@PathVariable Long itemId, @ModelAttribute("form") BookForm form) {
 
-        Book book = new Book();
-        book.setIsbn(form.getIsbn());
-        book.setId(form.getId());
-        book.setName(form.getName());
-        book.setPrice(form.getPrice());
-        book.setStockQuantity(form.getStockQuantity());
-        book.setAuthor(form.getAuthor());
-        book.setIsbn(form.getIsbn());
+        /**
+         * 이런 것을 준영속 상태 객체
+         * 식별할 수 있는 Id를 가지고 있기 때문
+         */
+//        Book book = new Book();
+//        book.setIsbn(form.getIsbn());
+//        book.setId(form.getId());
+//        book.setName(form.getName());
+//        book.setPrice(form.getPrice());
+//        book.setStockQuantity(form.getStockQuantity());
+//        book.setAuthor(form.getAuthor());
+//        book.setIsbn(form.getIsbn());
 
-        itemService.saveItem(book);
+//        itemService.saveItem(book);
+
+        itemService.updateItem(itemId, form.getName(), form.getPrice(), form.getStockQuantity());
         return "redirect:/items";
     }
 
