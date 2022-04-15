@@ -13,20 +13,22 @@ public class JpaMain {
         EntityManager em = emf.createEntityManager();
 
         EntityTransaction tx = em.getTransaction();
+        //단순 데이터 조회는 트랜잭션 없어도 된다
         tx.begin();
 
         try {
 
-//            Member findMember = em.find(Member.class, 2L);
 
-            List<Member> result = em.createQuery("select m from Member as m", Member.class)
-                    .setFirstResult(5)
-                    .setMaxResults(8)
-                    .getResultList();
+            //비영속
+            Member member = new Member();
+            member.setId(100L);
+            member.setName("HelloJPA");
 
-            for (Member member : result) {
-                System.out.println("member.name = " + member.getName());
-            }
+            //영속 상태
+            System.out.println("=== BEFORE ===");
+            em.persist(member);
+            em.detach(member);
+            System.out.println("=== AFTER ===");
 
             tx.commit();
 
@@ -36,6 +38,7 @@ public class JpaMain {
             em.close();
         }
 
+        //리소스 릴리즈 반드시 필요
         emf.close();
 
     }

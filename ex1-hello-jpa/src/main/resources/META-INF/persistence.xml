@@ -10,8 +10,7 @@
             <property name="javax.persistence.jdbc.user" value="sa"/>
             <property name="javax.persistence.jdbc.password" value="1234"/>
             <property name="javax.persistence.jdbc.url" value="jdbc:h2:tcp://localhost/~/test"/>
-            <!--데이터베이스 방언! 오라클을 쓰다가 mysql을 쓰더라도 잘 되어야 한다
-            방언이라는 단어를 쓴 이유는 -->
+            <!--데이터베이스 방언! 오라클을 쓰다가 mysql을 쓰더라도 잘 되어야 한다-->
             <property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect"/>
             <!-- 옵션 -->
             <property name="hibernate.show_sql" value="true"/>
