@@ -81,7 +81,7 @@ public class JpaMain {
 //
 //            System.out.println("===========");
 
-            Member member1 = new Member();
+/*            Member member1 = new Member();
             member1.setUsername("A");
             Member member2 = new Member();
             member2.setUsername("B");
@@ -97,7 +97,30 @@ public class JpaMain {
             System.out.println("member.id : "+ member1.getId() );
             System.out.println("member.id : "+ member2.getId() );
             System.out.println("member.id : "+ member3.getId() );
-            System.out.println("====================");
+            System.out.println("====================");*/
+
+            //
+
+            Team team = new Team();
+            team.setName("TeamA");
+            em.persist(team);
+
+            Member member = new Member();
+            member.setUsername("member1");
+            member.setTeam(team);
+            em.persist(member);
+
+            em.flush();
+            em.clear();
+
+            Member findMember = em.find(Member.class, member.getId());
+            Team findTeam = findMember.getTeam();
+            System.out.println("findTeam = " + findTeam.getName());
+
+            //
+            Team newTeam = em.find(Team.class, 100L);
+
+            findMember.setTeam(newTeam);
 
             tx.commit();
         } catch (Exception e) {
