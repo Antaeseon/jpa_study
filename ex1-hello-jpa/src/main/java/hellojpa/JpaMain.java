@@ -101,27 +101,27 @@ public class JpaMain {
 
             //
 
-            Team team = new Team();
-            team.setName("TeamA");
-            em.persist(team);
-            
-            Member member = new Member();
-            member.setUsername("member1");
-            member.changeTeam(team);
-            em.persist(member);
-
-            team.addMember(member);
+            // Team team = new Team();
+            // team.setName("TeamA");
+            // em.persist(team);
+            //
+            // Member member = new Member();
+            // member.setUsername("member1");
+            // member.changeTeam(team);
+            // em.persist(member);
+            //
+            // team.addMember(member);
 
             // team.getMembers().add(member);
 
             // em.flush();
             // em.clear();
 
-            Team findTeam = em.find(Team.class, team.getId());  //1차 캐시
-            List<Member> members = findTeam.getMembers();
-            System.out.println("===========");
-            System.out.println("findTeam = " + findTeam);
-            System.out.println("===========");
+            // Team findTeam = em.find(Team.class, team.getId());  //1차 캐시
+            // List<Member> members = findTeam.getMembers();
+            // System.out.println("===========");
+            // System.out.println("findTeam = " + findTeam);
+            // System.out.println("===========");
 
             // Member findMember = em.find(Member.class, member.getId());
             //
@@ -136,6 +136,16 @@ public class JpaMain {
             가장 많이 하는 실수 !! 매우 중요
              */
 
+            Member member = saveMember(em);
+
+            Team team = new Team();
+            team.setName("teamA");
+
+            //
+            team.getMembers().add(member);
+
+            em.persist(team);
+
 
             tx.commit();
         } catch (Exception e) {
@@ -147,5 +157,12 @@ public class JpaMain {
         //리소스 릴리즈 반드시 필요
         emf.close();
 
+    }
+
+    private static Member saveMember(EntityManager em) {
+        Member member = new Member();
+        member.setUsername("member1");
+        em.persist(member);
+        return member;
     }
 }

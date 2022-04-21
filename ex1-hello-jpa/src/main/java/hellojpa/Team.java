@@ -7,6 +7,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 
 @Entity
@@ -19,7 +20,8 @@ public class Team {
 
 	private String name;
 
-	@OneToMany(mappedBy = "team") // 팀으로 매핑이 되어 있다는 것을 알린다.
+	@OneToMany // 팀으로 매핑이 되어 있다는 것을 알린다.
+	@JoinColumn(name = "TEAM_ID")
 	private List<Member> members = new ArrayList<>();
 
 	public Long getId() {
@@ -46,18 +48,18 @@ public class Team {
 		this.members = members;
 	}
 
-	public void addMember(Member member) {
-		member.setTeam(this);
-		members.add(member);
-
-	}
-
-	@Override
-	public String toString() {
-		return "Team{" +
-			"id=" + id +
-			", name='" + name + '\'' +
-			", members=" + members +
-			'}';
-	}
+	// public void addMember(Member member) {
+	// 	member.setTeam(this);
+	// 	members.add(member);
+	//
+	// }
+	//
+	// @Override
+	// public String toString() {
+	// 	return "Team{" +
+	// 		"id=" + id +
+	// 		", name='" + name + '\'' +
+	// 		", members=" + members +
+	// 		'}';
+	// }
 }

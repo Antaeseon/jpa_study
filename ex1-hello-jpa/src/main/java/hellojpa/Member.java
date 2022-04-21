@@ -9,8 +9,12 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.Lob;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
@@ -19,8 +23,11 @@ import javax.persistence.TemporalType;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.locks.Lock;
 
 @Entity
 public class Member {
@@ -32,12 +39,20 @@ public class Member {
 	@Column(name = "USER_NAME")
 	private String username;
 
-	// @Column(name = "TEAM_ID")
-	// private Long teamId;
-
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "TEAM_ID")
+	@ManyToOne
+	@JoinColumn(name = "TEAM_ID", insertable = false, updatable = false) // 읽기 전용으로 처리를 해버린
 	private Team team;
+
+	@OneToOne
+	@JoinColumn(name = "LOCKER_ID")
+	private Locker locker;
+
+	// @ManyToMany
+	// @JoinTable(name = "MEMBER_PRODUCT")
+	// private List<Product> products = new ArrayList<>();
+
+	@OneToMany(mappedBy = "member")
+	private List<MemberProduct> memberProducts = new ArrayList<>();
 
 	public Long getId() {
 		return id;
@@ -55,25 +70,8 @@ public class Member {
 		this.username = username;
 	}
 
-	public Team getTeam() {
-		return team;
-	}
+	// public Team getTeam() {
+	// 	return team;
+	// }
 
-	public void changeTeam(Team team) {
-		this.team = team;
-		team.getMembers().add(this);
-	}
-
-	public void setTeam(Team team) {
-		this.team = team;
-	}
-
-	@Override
-	public String toString() {
-		return "Member{" +
-			"id=" + id +
-			", username='" + username + '\'' +
-			", team=" + team +
-			'}';
-	}
 }
