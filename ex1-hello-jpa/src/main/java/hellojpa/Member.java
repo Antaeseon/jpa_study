@@ -40,7 +40,7 @@ public class Member {
 	private String username;
 
 	@ManyToOne
-	@JoinColumn(name = "TEAM_ID", insertable = false, updatable = false) // 읽기 전용으로 처리를 해버린
+	@JoinColumn(name = "TEAM_ID", insertable = false, updatable = false) // 읽기 전용으로 처리를 해버린다.
 	private Team team;
 
 	@OneToOne
