@@ -12,7 +12,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
-public class Member {
+public class Member extends BaseTimeEntity{
 
 	@Id @GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "MEMBER_ID")
