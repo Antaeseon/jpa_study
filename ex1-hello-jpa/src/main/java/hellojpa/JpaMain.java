@@ -136,13 +136,30 @@ public class JpaMain {
             가장 많이 하는 실수 !! 매우 중요
              */
 
-            Member member = saveMember(em);
+            // Member member = saveMember(em);
+            //
+            // Team team = new Team();
+            // team.setName("teamA");
+            // team.getMembers().add(member);
+            // em.persist(team);
 
-            Team team = new Team();
-            team.setName("teamA");
-            team.getMembers().add(member);
-            em.persist(team);
+            /*
+               inheritance test
+             */
 
+            Movie movie = new Movie();
+            movie.setActor("aaaa");
+            movie.setDirector("bbbb");
+            movie.setName("바람과 함께 사라지다");
+            movie.setPrice(10000);
+
+            em.persist(movie);
+
+            em.flush();
+            em.clear();
+
+            Movie findMovie = em.find(Movie.class, movie.getId());
+            System.out.println("findMovie = " + findMovie);
 
             tx.commit();
         } catch (Exception e) {
