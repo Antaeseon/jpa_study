@@ -4,6 +4,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
+
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class JpaMain {
@@ -147,6 +149,7 @@ public class JpaMain {
                inheritance test
              */
 
+/*
             Movie movie = new Movie();
             movie.setActor("aaaa");
             movie.setDirector("bbbb");
@@ -159,7 +162,14 @@ public class JpaMain {
             em.clear();
 
             Movie findMovie = em.find(Movie.class, movie.getId());
+*/
 
+            Member member = new Member();
+            member.setUsername("kim");
+            member.setCreatedBy("kim");
+            member.setCreatedDate(LocalDateTime.now());
+
+            em.persist(member);
             tx.commit();
         } catch (Exception e) {
             tx.rollback();

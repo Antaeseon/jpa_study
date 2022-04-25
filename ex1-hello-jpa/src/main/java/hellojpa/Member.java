@@ -30,7 +30,7 @@ import java.util.Optional;
 import java.util.concurrent.locks.Lock;
 
 @Entity
-public class Member {
+public class Member extends BaseEntity{
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "MEMBER_ID")
@@ -46,6 +46,7 @@ public class Member {
 	@OneToOne
 	@JoinColumn(name = "LOCKER_ID")
 	private Locker locker;
+
 
 	// @ManyToMany
 	// @JoinTable(name = "MEMBER_PRODUCT")

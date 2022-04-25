@@ -10,8 +10,10 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 
+import com.sun.xml.internal.rngom.parse.host.Base;
+
 @Entity
-public class Team {
+public class Team extends BaseEntity {
 
 	@Id
 	@GeneratedValue
