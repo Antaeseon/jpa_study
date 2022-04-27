@@ -39,7 +39,7 @@ public class Member extends BaseEntity{
 	@Column(name = "USER_NAME")
 	private String username;
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY) // 지연 로딩 이용 프록시
 	@JoinColumn(name = "TEAM_ID", insertable = false, updatable = false) // 읽기 전용으로 처리를 해버린다.
 	private Team team;
 
