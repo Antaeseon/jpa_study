@@ -39,8 +39,8 @@ public class Member extends BaseEntity{
 	@Column(name = "USER_NAME")
 	private String username;
 
-	// @ManyToOne(fetch = FetchType.LAZY) // 지연 로딩 이용 프록시
-	@ManyToOne(fetch = FetchType.EAGER) // 즉시 로딩 ( 실무에서는 사용하면 안된다 )
+	@ManyToOne(fetch = FetchType.LAZY) // 지연 로딩 이용 프록시
+	// @ManyToOne(fetch = FetchType.EAGER) // 즉시 로딩 ( 실무에서는 사용하면 안된다 )
 	@JoinColumn(name = "TEAM_ID", insertable = false, updatable = false) // 읽기 전용으로 처리를 해버린다.
 	private Team team;
 

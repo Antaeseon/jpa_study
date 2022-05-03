@@ -3,6 +3,7 @@ package hellojpa;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -22,7 +23,7 @@ public class Team extends BaseEntity {
 
 	private String name;
 
-	@OneToMany // 팀으로 매핑이 되어 있다는 것을 알린다.
+	@OneToMany(cascade = CascadeType.ALL) // 팀으로 매핑이 되어 있다는 것을 알린다.
 	@JoinColumn(name = "TEAM_ID") // 주인이 되는 형식인데 잘 사용하지 않는다.
 	private List<Member> members = new ArrayList<>();
 
