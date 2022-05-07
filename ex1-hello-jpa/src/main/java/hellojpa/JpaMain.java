@@ -8,6 +8,8 @@ import javax.persistence.Persistence;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import org.hibernate.Hibernate;
+
 public class JpaMain {
     public static void main(String[] args) {
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("hello");
@@ -173,24 +175,23 @@ public class JpaMain {
             em.persist(member);
 */
 
-            Member member = new Member();
-            member.setUsername("hello");
-
-            em.persist(member);
+            Member member1 = new Member();
+            member1.setUsername("member1");
+            em.persist(member1);
 
             em.flush();
             em.clear();
 
-            //
-            // Member findMember = em.find(Member.class, member.getId());
-            Member findMember = em.getReference(Member.class, member.getId());
-            System.out.println("findMember = " + findMember.getClass());
-            System.out.println("findMember.getId() = " + findMember.getId());
-            System.out.println("findMember = " + findMember.getUsername());
+            Member refMember = em.getReference(Member.class, member1.getId());
+            System.out.println("refMember = " + refMember.getClass());
+            // refMember.getUsername(); // 강제 초기화
+
+            Hibernate.initialize(refMember); // 강제 초기화
 
             tx.commit();
         } catch (Exception e) {
             tx.rollback();
+            e.printStackTrace();
         } finally {
             em.close();
         }
@@ -199,6 +200,7 @@ public class JpaMain {
         emf.close();
 
     }
+
 
     private static void printMember(Member member) {
         System.out.println("member.getUsername() = " + member.getUsername());
