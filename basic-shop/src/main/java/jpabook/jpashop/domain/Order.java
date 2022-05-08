@@ -1,10 +1,14 @@
 package jpabook.jpashop.domain;
 
+import static javax.persistence.CascadeType.*;
+import static javax.persistence.FetchType.*;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -27,16 +31,16 @@ public class Order extends BaseTimeEntity{
 	private Long id;
 
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = LAZY)
 	@JoinColumn(name = "MEMBER_ID")
 	private Member member;
 
 
-	@OneToOne(fetch = FetchType.LAZY)
+	@OneToOne(fetch = LAZY,cascade = ALL)
 	@JoinColumn(name = "DELIVERY_ID")
 	private Delivery delivery;
 
-	@OneToMany(mappedBy = "order")
+	@OneToMany(mappedBy = "order",cascade = ALL)
 	private List<OrderItem> orderItems = new ArrayList<>();
 
 
