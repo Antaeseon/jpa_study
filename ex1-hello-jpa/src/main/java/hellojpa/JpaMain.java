@@ -176,34 +176,34 @@ public class JpaMain {
 */
 
 
-            Team teamA = new Team();
-            teamA.setName("TeamA");
-            em.persist(teamA);
-
-
-            Team teamB = new Team();
-            teamB.setName("TeamA");
-            em.persist(teamB);
-
-
-            Member member1 = new Member();
-            member1.setUsername("member1");
-            member1.setTeam(teamA);
-            em.persist(member1);
-
-            Member member2 = new Member();
-            member2.setUsername("member2");
-            member2.setTeam(teamB);
-            em.persist(member2);
-
-
-            em.flush();
-            em.clear();
-
-            // Member m = em.find(Member.class, member1.getId());
-
-            List<Member> members = em.createQuery("select m from Member m join fetch m.team", Member.class)
-                .getResultList();
+            // Team teamA = new Team();
+            // teamA.setName("TeamA");
+            // em.persist(teamA);
+            //
+            //
+            // Team teamB = new Team();
+            // teamB.setName("TeamA");
+            // em.persist(teamB);
+            //
+            //
+            // Member member1 = new Member();
+            // member1.setUsername("member1");
+            // member1.setTeam(teamA);
+            // em.persist(member1);
+            //
+            // Member member2 = new Member();
+            // member2.setUsername("member2");
+            // member2.setTeam(teamB);
+            // em.persist(member2);
+            //
+            //
+            // em.flush();
+            // em.clear();
+            //
+            // // Member m = em.find(Member.class, member1.getId());
+            //
+            // List<Member> members = em.createQuery("select m from Member m join fetch m.team", Member.class)
+            //     .getResultList();
 
 
 
@@ -217,6 +217,26 @@ public class JpaMain {
             // System.out.println("teamName = " + m.getTeam().getName());
             // System.out.println("===================");
 
+            /*
+                CASCADE
+             */
+
+
+            Child child1 = new Child();
+            Child child2 = new Child();
+            Parent parent = new Parent();
+            parent.addChild(child1);
+            parent.addChild(child2);
+            em.persist(parent);
+            // em.persist(child1);
+            // em.persist(child2);
+            em.flush();
+            em.clear();
+
+            Parent findParent = em.find(Parent.class, parent.getId());
+            findParent.getChildList().remove(0);
+
+            em.remove(findParent);
 
             tx.commit();
         } catch (Exception e) {
@@ -225,6 +245,9 @@ public class JpaMain {
         } finally {
             em.close();
         }
+
+
+
 
         //리소스 릴리즈 반드시 필요
         emf.close();
