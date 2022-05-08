@@ -175,18 +175,48 @@ public class JpaMain {
             em.persist(member);
 */
 
+
+            Team teamA = new Team();
+            teamA.setName("TeamA");
+            em.persist(teamA);
+
+
+            Team teamB = new Team();
+            teamB.setName("TeamA");
+            em.persist(teamB);
+
+
             Member member1 = new Member();
             member1.setUsername("member1");
+            member1.setTeam(teamA);
             em.persist(member1);
+
+            Member member2 = new Member();
+            member2.setUsername("member2");
+            member2.setTeam(teamB);
+            em.persist(member2);
+
 
             em.flush();
             em.clear();
 
-            Member refMember = em.getReference(Member.class, member1.getId());
-            System.out.println("refMember = " + refMember.getClass());
-            // refMember.getUsername(); // 강제 초기화
+            // Member m = em.find(Member.class, member1.getId());
 
-            Hibernate.initialize(refMember); // 강제 초기화
+            List<Member> members = em.createQuery("select m from Member m join fetch m.team", Member.class)
+                .getResultList();
+
+
+
+            //SQL : select * from Member;
+            //SQL : select from Team where TEAM_ID = xxx
+
+
+            // System.out.println("refMember = " + m.getTeam().getClass());
+            //
+            // System.out.println("===================");
+            // System.out.println("teamName = " + m.getTeam().getName());
+            // System.out.println("===================");
+
 
             tx.commit();
         } catch (Exception e) {
