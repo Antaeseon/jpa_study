@@ -238,11 +238,22 @@ public class JpaMain {
 
             em.remove(findParent);*/
 
-            Member member = new Member();
+/*            Member member = new Member();
             member.setUsername("hello");
             member.setHomeAddress(new Address("cith","street","he"));
             member.setWorkPeriod(new Period());
+            em.persist(member);*/
+
+            Address address = new Address("city", "street", "10000");
+
+            Member member = new Member();
+            member.setUsername("member1");
+            member.setHomeAddress(address);
             em.persist(member);
+
+
+            Address newAddress = new Address("NewCity", address.getStreet(), address.getZipcode());
+            member.setHomeAddress(newAddress);
 
             tx.commit();
         } catch (Exception e) {
