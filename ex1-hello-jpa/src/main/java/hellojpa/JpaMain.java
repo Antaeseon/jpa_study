@@ -222,7 +222,7 @@ public class JpaMain {
              */
 
 
-            Child child1 = new Child();
+/*            Child child1 = new Child();
             Child child2 = new Child();
             Parent parent = new Parent();
             parent.addChild(child1);
@@ -236,7 +236,13 @@ public class JpaMain {
             Parent findParent = em.find(Parent.class, parent.getId());
             findParent.getChildList().remove(0);
 
-            em.remove(findParent);
+            em.remove(findParent);*/
+
+            Member member = new Member();
+            member.setUsername("hello");
+            member.setHomeAddress(new Address("cith","street","he"));
+            member.setWorkPeriod(new Period());
+            em.persist(member);
 
             tx.commit();
         } catch (Exception e) {
