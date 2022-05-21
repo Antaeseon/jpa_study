@@ -4,6 +4,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
+import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
@@ -293,12 +294,26 @@ public class JpaMain {
 			// }
 
 			//Criteria 사용 준비
-			CriteriaBuilder cb = em.getCriteriaBuilder();
-			CriteriaQuery<Member> query = cb.createQuery(Member.class);
-			Root<Member> m = query.from(Member.class);
+			// CriteriaBuilder cb = em.getCriteriaBuilder();
+			// CriteriaQuery<Member> query = cb.createQuery(Member.class);
+			// Root<Member> m = query.from(Member.class);
+			//
+			// CriteriaQuery<Member> cq = query.select(m).where(cb.equal(m.get("username"), "kim"));
+			// List<Member> resultList = em.createQuery(cq)
+			// 	.getResultList();
 
-			CriteriaQuery<Member> cq = query.select(m).where(cb.equal(m.get("username"), "kim"));
-			List<Member> resultList = em.createQuery(cq)
+			Member member = new Member();
+			member.setUsername("member1");
+			em.persist(member);
+
+			//flush -> commit, query
+
+			em.flush();
+
+			//결과 0
+			//dbconn.executeQuery("select * from member");
+
+			List select_member_id_from_member = em.createNativeQuery("SELECT MEMBER_ID FROM MEMBER", Member.class)
 				.getResultList();
 
 			tx.commit();
