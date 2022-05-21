@@ -313,7 +313,10 @@ public class JpaMain {
 			//결과 0
 			//dbconn.executeQuery("select * from member");
 
-			List select_member_id_from_member = em.createNativeQuery("SELECT MEMBER_ID FROM MEMBER", Member.class)
+			// List select_member_id_from_member = em.createNativeQuery("SELECT MEMBER_ID FROM MEMBER", Member.class)
+			// 	.getResultList();
+
+			em.createQuery("select i from Item i where type(i) = Book ", Item.class)
 				.getResultList();
 
 			tx.commit();
@@ -323,6 +326,7 @@ public class JpaMain {
 		} finally {
 			em.close();
 		}
+
 
 		//리소스 릴리즈 반드시 필요
 		emf.close();
