@@ -4,86 +4,86 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 import org.hibernate.Hibernate;
 
 public class JpaMain {
-    public static void main(String[] args) {
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("hello");
+	public static void main(String[] args) {
+		EntityManagerFactory emf = Persistence.createEntityManagerFactory("hello");
 
-        EntityManager em = emf.createEntityManager();
+		EntityManager em = emf.createEntityManager();
 
-        EntityTransaction tx = em.getTransaction();
-        //단순 데이터 조회는 트랜잭션 없어도 된다
-        tx.begin();
+		EntityTransaction tx = em.getTransaction();
+		//단순 데이터 조회는 트랜잭션 없어도 된다
+		tx.begin();
 
-        try {
+		try {
 
+			//비영속
+			//            Member member = new Member();
+			//            member.setId(101L);
+			//            member.setName("HelloJPA");
+			//
+			//            //영속 상태
+			//            System.out.println("=== BEFORE ===");
+			//            em.persist(member);
+			//            System.out.println("=== AFTER ===");
+			//
+			//            Member findMember = em.find(Member.class, 101L);
+			//
+			//            System.out.println("findMember.id = " + findMember.getId());
+			//            System.out.println("findMember.name = " + findMember.getName());
 
-            //비영속
-//            Member member = new Member();
-//            member.setId(101L);
-//            member.setName("HelloJPA");
-//
-//            //영속 상태
-//            System.out.println("=== BEFORE ===");
-//            em.persist(member);
-//            System.out.println("=== AFTER ===");
-//
-//            Member findMember = em.find(Member.class, 101L);
-//
-//            System.out.println("findMember.id = " + findMember.getId());
-//            System.out.println("findMember.name = " + findMember.getName());
+			/**
+			 * 같은것을 두번 조회할 때에는 1차캐시에서 가져온다
+			 */
+			//            Member findMember1 = em.find(Member.class, 101L);
+			//            Member findMember2 = em.find(Member.class, 101L);
+			//
+			//            System.out.println("result = " + (findMember1 == findMember2));
 
+			//            Member member1 = new Member(150L, "A");
+			//            Member member2 = new Member(160L, "B");
+			//            em.persist(member1);
+			//            em.persist(member2);
+			//
+			//            System.out.println("===================");
+			//            tx.commit();
 
-            /**
-             * 같은것을 두번 조회할 때에는 1차캐시에서 가져온다
-             */
-//            Member findMember1 = em.find(Member.class, 101L);
-//            Member findMember2 = em.find(Member.class, 101L);
-//
-//            System.out.println("result = " + (findMember1 == findMember2));
+			//            Member member = em.find(Member.class, 150L);
+			//            member.setName("ZZZZZ");
+			//
+			//            if (member.getName().equals("ZZZZZ")) {
+			//                em.persist(member);
+			//            }
+			//
+			//            System.out.println("==========");
 
-//            Member member1 = new Member(150L, "A");
-//            Member member2 = new Member(160L, "B");
-//            em.persist(member1);
-//            em.persist(member2);
-//
-//            System.out.println("===================");
-//            tx.commit();
+			//            Member member = new Member(200L, "member200");
+			//            em.persist(member);
+			//
+			//            em.flush();
+			//
+			//            System.out.println("===========");
 
-
-//            Member member = em.find(Member.class, 150L);
-//            member.setName("ZZZZZ");
-//
-//            if (member.getName().equals("ZZZZZ")) {
-//                em.persist(member);
-//            }
-//
-//            System.out.println("==========");
-
-
-//            Member member = new Member(200L, "member200");
-//            em.persist(member);
-//
-//            em.flush();
-//
-//            System.out.println("===========");
-
-            /**
-             * 준영속 상태
-             */
-//            Member member = em.find(Member.class, 150L);
-//            member.setName("AAAAA");
-//
-//            em.clear(); // 1차 캐시를 삭제해버림
-//
-//            Member member2 = em.find(Member.class, 150L);
-//
-//            System.out.println("===========");
+			/**
+			 * 준영속 상태
+			 */
+			//            Member member = em.find(Member.class, 150L);
+			//            member.setName("AAAAA");
+			//
+			//            em.clear(); // 1차 캐시를 삭제해버림
+			//
+			//            Member member2 = em.find(Member.class, 150L);
+			//
+			//            System.out.println("===========");
 
 /*            Member member1 = new Member();
             member1.setUsername("A");
@@ -103,49 +103,49 @@ public class JpaMain {
             System.out.println("member.id : "+ member3.getId() );
             System.out.println("====================");*/
 
-            //
+			//
 
-            // Team team = new Team();
-            // team.setName("TeamA");
-            // em.persist(team);
-            //
-            // Member member = new Member();
-            // member.setUsername("member1");
-            // member.changeTeam(team);
-            // em.persist(member);
-            //
-            // team.addMember(member);
+			// Team team = new Team();
+			// team.setName("TeamA");
+			// em.persist(team);
+			//
+			// Member member = new Member();
+			// member.setUsername("member1");
+			// member.changeTeam(team);
+			// em.persist(member);
+			//
+			// team.addMember(member);
 
-            // team.getMembers().add(member);
+			// team.getMembers().add(member);
 
-            // em.flush();
-            // em.clear();
+			// em.flush();
+			// em.clear();
 
-            // Team findTeam = em.find(Team.class, team.getId());  //1차 캐시
-            // List<Member> members = findTeam.getMembers();
-            // System.out.println("===========");
-            // System.out.println("findTeam = " + findTeam);
-            // System.out.println("===========");
+			// Team findTeam = em.find(Team.class, team.getId());  //1차 캐시
+			// List<Member> members = findTeam.getMembers();
+			// System.out.println("===========");
+			// System.out.println("findTeam = " + findTeam);
+			// System.out.println("===========");
 
-            // Member findMember = em.find(Member.class, member.getId());
-            //
-            // List<Member> members = findMember.getTeam().getMembers();
-            //
-            // for (Member m : members) {
-            //     System.out.println("m = " + m.getUsername());
-            // }
+			// Member findMember = em.find(Member.class, member.getId());
+			//
+			// List<Member> members = findMember.getTeam().getMembers();
+			//
+			// for (Member m : members) {
+			//     System.out.println("m = " + m.getUsername());
+			// }
 
 
             /*
             가장 많이 하는 실수 !! 매우 중요
              */
 
-            // Member member = saveMember(em);
-            //
-            // Team team = new Team();
-            // team.setName("teamA");
-            // team.getMembers().add(member);
-            // em.persist(team);
+			// Member member = saveMember(em);
+			//
+			// Team team = new Team();
+			// team.setName("teamA");
+			// team.getMembers().add(member);
+			// em.persist(team);
 
             /*
                inheritance test
@@ -175,47 +175,43 @@ public class JpaMain {
             em.persist(member);
 */
 
+			// Team teamA = new Team();
+			// teamA.setName("TeamA");
+			// em.persist(teamA);
+			//
+			//
+			// Team teamB = new Team();
+			// teamB.setName("TeamA");
+			// em.persist(teamB);
+			//
+			//
+			// Member member1 = new Member();
+			// member1.setUsername("member1");
+			// member1.setTeam(teamA);
+			// em.persist(member1);
+			//
+			// Member member2 = new Member();
+			// member2.setUsername("member2");
+			// member2.setTeam(teamB);
+			// em.persist(member2);
+			//
+			//
+			// em.flush();
+			// em.clear();
+			//
+			// // Member m = em.find(Member.class, member1.getId());
+			//
+			// List<Member> members = em.createQuery("select m from Member m join fetch m.team", Member.class)
+			//     .getResultList();
 
-            // Team teamA = new Team();
-            // teamA.setName("TeamA");
-            // em.persist(teamA);
-            //
-            //
-            // Team teamB = new Team();
-            // teamB.setName("TeamA");
-            // em.persist(teamB);
-            //
-            //
-            // Member member1 = new Member();
-            // member1.setUsername("member1");
-            // member1.setTeam(teamA);
-            // em.persist(member1);
-            //
-            // Member member2 = new Member();
-            // member2.setUsername("member2");
-            // member2.setTeam(teamB);
-            // em.persist(member2);
-            //
-            //
-            // em.flush();
-            // em.clear();
-            //
-            // // Member m = em.find(Member.class, member1.getId());
-            //
-            // List<Member> members = em.createQuery("select m from Member m join fetch m.team", Member.class)
-            //     .getResultList();
+			//SQL : select * from Member;
+			//SQL : select from Team where TEAM_ID = xxx
 
-
-
-            //SQL : select * from Member;
-            //SQL : select from Team where TEAM_ID = xxx
-
-
-            // System.out.println("refMember = " + m.getTeam().getClass());
-            //
-            // System.out.println("===================");
-            // System.out.println("teamName = " + m.getTeam().getName());
-            // System.out.println("===================");
+			// System.out.println("refMember = " + m.getTeam().getClass());
+			//
+			// System.out.println("===================");
+			// System.out.println("teamName = " + m.getTeam().getName());
+			// System.out.println("===================");
 
             /*
                 CASCADE
@@ -243,51 +239,97 @@ public class JpaMain {
             member.setHomeAddress(new Address("cith","street","he"));
             member.setWorkPeriod(new Period());
             em.persist(member);*/
+			//
+			// Address address = new Address("city", "street", "10000");
+			//
+			// Member member = new Member();
+			// member.setUsername("member1");
+			// member.setHomeAddress(address);
+			// em.persist(member);
+			//
+			//
+			// Address newAddress = new Address("NewCity", address.getStreet(), address.getZipcode());
+			// member.setHomeAddress(newAddress);
+			//
+            // Member member = new Member();
+            // member.setUsername("member1");
+            // member.setHomeAddress(new Address("homeCity", "street", "10000"));
+			//
+            // member.getFavoriteFoods().add("치킨");
+            // member.getFavoriteFoods().add("족발");
+            // member.getFavoriteFoods().add("피자");
+			//
+            // member.getAddressHistory().add(new AddressEntity("old1", "street", "10000"));
+            // member.getAddressHistory().add(new AddressEntity("old2", "street", "10000"));
+			//
+            // em.persist(member);
+			//
+            // em.flush();
+            // em.clear();
+			//
+            // System.out.println("=================== START ==================");
+            // Member findMember = em.find(Member.class, member.getId());
+            // // System.out.println("findMember = " + findMember);
+            // //homeCity -> newCity
+            // // findMember.getHomeAddress().setCity("newCity");
+            // // Address a = findMember.getHomeAddress();
+            // // findMember.setHomeAddress(new Address("newCity", a.getStreet(), a.getZipcode()));
+			//
+            // //치킨 -> 한식
+            // // findMember.getFavoriteFoods().remove("치킨");
+            // // findMember.getFavoriteFoods().add("한식");
+			//
+            // System.out.println("=================== ADDRESS ==================");
+            // // findMember.getAddressHistory().remove(new Address("old1", "street", "10000"));
+            // // findMember.getAddressHistory().add(new Address("newCity1", "street", "10000"));
 
-            Address address = new Address("city", "street", "10000");
+			// String qlString = "select m from Member m where m.username like '%kim'";
+			// List<Member> result = em.createQuery(
+			// 	qlString
+			// 	, Member.class).getResultList();
+			//
+			// for (Member member : result) {
+			// 	System.out.println("member = " + member);
+			// }
 
-            Member member = new Member();
-            member.setUsername("member1");
-            member.setHomeAddress(address);
-            em.persist(member);
+			//Criteria 사용 준비
+			CriteriaBuilder cb = em.getCriteriaBuilder();
+			CriteriaQuery<Member> query = cb.createQuery(Member.class);
+			Root<Member> m = query.from(Member.class);
 
+			CriteriaQuery<Member> cq = query.select(m).where(cb.equal(m.get("username"), "kim"));
+			List<Member> resultList = em.createQuery(cq)
+				.getResultList();
 
-            Address newAddress = new Address("NewCity", address.getStreet(), address.getZipcode());
-            member.setHomeAddress(newAddress);
+			tx.commit();
+		} catch (Exception e) {
+			tx.rollback();
+			e.printStackTrace();
+		} finally {
+			em.close();
+		}
 
-            tx.commit();
-        } catch (Exception e) {
-            tx.rollback();
-            e.printStackTrace();
-        } finally {
-            em.close();
-        }
+		//리소스 릴리즈 반드시 필요
+		emf.close();
 
+	}
 
+	private static void printMember(Member member) {
+		System.out.println("member.getUsername() = " + member.getUsername());
+	}
 
+	private static void printMemberAndTeam(Member member) {
+		String username = member.getUsername();
+		System.out.println("username = " + username);
 
-        //리소스 릴리즈 반드시 필요
-        emf.close();
+		Team team = member.getTeam();
+		System.out.println("team = " + team.getName());
+	}
 
-    }
-
-
-    private static void printMember(Member member) {
-        System.out.println("member.getUsername() = " + member.getUsername());
-    }
-
-    private static void printMemberAndTeam(Member member) {
-        String username = member.getUsername();
-        System.out.println("username = " + username);
-
-        Team team = member.getTeam();
-        System.out.println("team = " + team.getName());
-    }
-
-    private static Member saveMember(EntityManager em) {
-        Member member = new Member();
-        member.setUsername("member1");
-        em.persist(member);
-        return member;
-    }
+	private static Member saveMember(EntityManager em) {
+		Member member = new Member();
+		member.setUsername("member1");
+		em.persist(member);
+		return member;
+	}
 }
