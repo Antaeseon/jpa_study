@@ -125,12 +125,29 @@ public class JpaMain {
 			// List<String> result = em.createQuery(query, String.class).getResultList();
 
 
-			String query = "select nullif(m.username,'관리자') from Member m";
-			List<String> result = em.createQuery(query, String.class).getResultList();
+			// String query = "select nullif(m.username,'관리자') from Member m";
+			// List<String> result = em.createQuery(query, String.class).getResultList();
+			//
+			// for (String s : result) {
+			// 	System.out.println("s = " + s);
+			// }
 
-			for (String s : result) {
+			// String query = "select concat('a', 'b') From Member m";
+			// String query = "select locate('de','abcdefg') from Member m";
+			// List<Integer> result = em.createQuery(query, Integer.class).getResultList();
+
+			// String query = "select size(t.members) From Team t";
+			// List<Integer> result = em.createQuery(query, Integer.class).getResultList();
+
+			String query = "select size(t.members) From Team t";
+			List<Integer> result = em.createQuery(query, Integer.class).getResultList();
+
+
+
+			for (Integer s : result) {
 				System.out.println("s = " + s);
 			}
+
 			tx.commit();
 		} catch (Exception e) {
 			tx.rollback();

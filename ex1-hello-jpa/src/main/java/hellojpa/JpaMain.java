@@ -10,6 +10,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -302,8 +303,14 @@ public class JpaMain {
 			// List<Member> resultList = em.createQuery(cq)
 			// 	.getResultList();
 
+			Team team = new Team();
+			team.setName("hello");
+			em.persist(team);
+
 			Member member = new Member();
 			member.setUsername("member1");
+			member.setTeam(team);
+
 			em.persist(member);
 
 			//flush -> commit, query
@@ -316,8 +323,16 @@ public class JpaMain {
 			// List select_member_id_from_member = em.createNativeQuery("SELECT MEMBER_ID FROM MEMBER", Member.class)
 			// 	.getResultList();
 
-			em.createQuery("select i from Item i where type(i) = Book ", Item.class)
+			// em.createQuery("select i from Item i where type(i) = Book ", Item.class)
+			// 	.getResultList();
+
+			String query = "select t.members From Team t";
+			Collection resultList = em.createQuery(query, Collection.class)
 				.getResultList();
+
+			for (Object o : resultList) {
+				System.out.println("o = " + o);
+			}
 
 			tx.commit();
 		} catch (Exception e) {
