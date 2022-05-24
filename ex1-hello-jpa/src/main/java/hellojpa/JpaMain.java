@@ -303,20 +303,24 @@ public class JpaMain {
 			// List<Member> resultList = em.createQuery(cq)
 			// 	.getResultList();
 
-			Team team = new Team();
-			team.setName("hello");
-			em.persist(team);
-
-			Member member = new Member();
-			member.setUsername("member1");
-			member.setTeam(team);
-
-			em.persist(member);
-
-			//flush -> commit, query
-
-			em.flush();
-
+			// Team team = new Team();
+			// team.setName("hello");
+			// em.persist(team);
+			//
+			// Member member = new Member();
+			// member.setUsername("member1");
+			// member.setTeam(team);
+			// em.persist(member);
+			//
+			//
+			// Member member2 = new Member();
+			// member2.setUsername("member1");
+			// member2.setTeam(team);
+			// em.persist(member2);
+			// //flush -> commit, query
+			//
+			// em.flush();
+			// em.clear();
 			//결과 0
 			//dbconn.executeQuery("select * from member");
 
@@ -326,12 +330,50 @@ public class JpaMain {
 			// em.createQuery("select i from Item i where type(i) = Book ", Item.class)
 			// 	.getResultList();
 
-			String query = "select t.members From Team t";
-			Collection resultList = em.createQuery(query, Collection.class)
-				.getResultList();
+			// String query = "select m.username From Team t join t.members m";
+			//
+			// Integer resultList = em.createQuery(query, Integer.class)
+			// 	.getSingleResult();
+			//
+			// System.out.println("resultList = " + resultList);
 
-			for (Object o : resultList) {
-				System.out.println("o = " + o);
+			Team teamA = new Team();
+			teamA.setName("팀A");
+			em.persist(teamA);
+
+			Team teamB = new Team();
+			teamB.setName("팀B");
+			em.persist(teamB);
+
+			Member member1 = new Member();
+			member1.setUsername("member1");
+			member1.setTeam(teamA);
+			em.persist(member1);
+
+			Member member2 = new Member();
+			member2.setUsername("member2");
+			member2.setTeam(teamA);
+			em.persist(member2);
+
+
+			Member member3 = new Member();
+			member3.setUsername("member3");
+			member3.setTeam(teamB);
+			em.persist(member3);
+
+			em.flush();
+			em.clear();
+			String query = "select m From Member m join fetch m.team";
+
+			List<Member> result = em.createQuery(query, Member.class).getResultList();
+
+			for (Member member : result) {
+				System.out.println("member = " + member.getUsername() + ", " + member.getTeam().getName());
+				//회원1, 팀A(SQL)
+				//회원2, 팀B(1차캐시)
+				//회원3, 팀B(SQL)
+
+				//회원 100명 조회 -> 쿼리 100번 나갈수도 (N+1 문제)
 			}
 
 			tx.commit();
