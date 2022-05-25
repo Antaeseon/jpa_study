@@ -253,37 +253,37 @@ public class JpaMain {
 			// Address newAddress = new Address("NewCity", address.getStreet(), address.getZipcode());
 			// member.setHomeAddress(newAddress);
 			//
-            // Member member = new Member();
-            // member.setUsername("member1");
-            // member.setHomeAddress(new Address("homeCity", "street", "10000"));
+			// Member member = new Member();
+			// member.setUsername("member1");
+			// member.setHomeAddress(new Address("homeCity", "street", "10000"));
 			//
-            // member.getFavoriteFoods().add("치킨");
-            // member.getFavoriteFoods().add("족발");
-            // member.getFavoriteFoods().add("피자");
+			// member.getFavoriteFoods().add("치킨");
+			// member.getFavoriteFoods().add("족발");
+			// member.getFavoriteFoods().add("피자");
 			//
-            // member.getAddressHistory().add(new AddressEntity("old1", "street", "10000"));
-            // member.getAddressHistory().add(new AddressEntity("old2", "street", "10000"));
+			// member.getAddressHistory().add(new AddressEntity("old1", "street", "10000"));
+			// member.getAddressHistory().add(new AddressEntity("old2", "street", "10000"));
 			//
-            // em.persist(member);
+			// em.persist(member);
 			//
-            // em.flush();
-            // em.clear();
+			// em.flush();
+			// em.clear();
 			//
-            // System.out.println("=================== START ==================");
-            // Member findMember = em.find(Member.class, member.getId());
-            // // System.out.println("findMember = " + findMember);
-            // //homeCity -> newCity
-            // // findMember.getHomeAddress().setCity("newCity");
-            // // Address a = findMember.getHomeAddress();
-            // // findMember.setHomeAddress(new Address("newCity", a.getStreet(), a.getZipcode()));
+			// System.out.println("=================== START ==================");
+			// Member findMember = em.find(Member.class, member.getId());
+			// // System.out.println("findMember = " + findMember);
+			// //homeCity -> newCity
+			// // findMember.getHomeAddress().setCity("newCity");
+			// // Address a = findMember.getHomeAddress();
+			// // findMember.setHomeAddress(new Address("newCity", a.getStreet(), a.getZipcode()));
 			//
-            // //치킨 -> 한식
-            // // findMember.getFavoriteFoods().remove("치킨");
-            // // findMember.getFavoriteFoods().add("한식");
+			// //치킨 -> 한식
+			// // findMember.getFavoriteFoods().remove("치킨");
+			// // findMember.getFavoriteFoods().add("한식");
 			//
-            // System.out.println("=================== ADDRESS ==================");
-            // // findMember.getAddressHistory().remove(new Address("old1", "street", "10000"));
-            // // findMember.getAddressHistory().add(new Address("newCity1", "street", "10000"));
+			// System.out.println("=================== ADDRESS ==================");
+			// // findMember.getAddressHistory().remove(new Address("old1", "street", "10000"));
+			// // findMember.getAddressHistory().add(new Address("newCity1", "street", "10000"));
 
 			// String qlString = "select m from Member m where m.username like '%kim'";
 			// List<Member> result = em.createQuery(
@@ -355,7 +355,6 @@ public class JpaMain {
 			member2.setTeam(teamA);
 			em.persist(member2);
 
-
 			Member member3 = new Member();
 			member3.setUsername("member3");
 			member3.setTeam(teamB);
@@ -363,18 +362,33 @@ public class JpaMain {
 
 			em.flush();
 			em.clear();
+			// String query = "select t From Team t join fetch t.members m";
 			String query = "select m From Member m join fetch m.team";
+			// String query = "select t From Team t";
 
-			List<Member> result = em.createQuery(query, Member.class).getResultList();
 
+			List<Member> result = em.createQuery(query, Member.class).
+				setFirstResult(0)
+				.setMaxResults(2)
+				.getResultList();
+
+			// for (Team team : result) {
+			// 	System.out.println("team = " + team.getName() + "| "+ team.getMembers().size());
+			// 	for (Member member : team.getMembers()) {
+			// 		System.out.println("->member = " + member);
+			// 	}
+			//
+			// }
 			for (Member member : result) {
-				System.out.println("member = " + member.getUsername() + ", " + member.getTeam().getName());
+				String name = member.getTeam().getName();
+			}
+			// for (Member team : result) {
 				//회원1, 팀A(SQL)
 				//회원2, 팀B(1차캐시)
 				//회원3, 팀B(SQL)
 
 				//회원 100명 조회 -> 쿼리 100번 나갈수도 (N+1 문제)
-			}
+			// }
 
 			tx.commit();
 		} catch (Exception e) {
@@ -383,7 +397,6 @@ public class JpaMain {
 		} finally {
 			em.close();
 		}
-
 
 		//리소스 릴리즈 반드시 필요
 		emf.close();

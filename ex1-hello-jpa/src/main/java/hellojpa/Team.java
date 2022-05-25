@@ -11,6 +11,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 
+import org.hibernate.annotations.BatchSize;
+
 import com.sun.xml.internal.rngom.parse.host.Base;
 
 @Entity
