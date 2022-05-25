@@ -363,14 +363,30 @@ public class JpaMain {
 			em.flush();
 			em.clear();
 			// String query = "select t From Team t join fetch t.members m";
-			String query = "select m From Member m join fetch m.team";
+			// String query = "select m From Member m join fetch m.team";
+			// String query = "select m From Member m where m.team = :team";
 			// String query = "select t From Team t";
 
+			// List<Member> members = em.createQuery(query, Member.class)
+			// 	.setParameter("team", teamA)
+			// 	.getResultList();
+			//
+			// for (Member member : members) {
+			// 	System.out.println("member = " + member);
+			// }
 
-			List<Member> result = em.createQuery(query, Member.class).
-				setFirstResult(0)
-				.setMaxResults(2)
+			List<Member> resultList = em.createNamedQuery("Member.findByUsername", Member.class)
+				.setParameter("username", "member1")
 				.getResultList();
+
+			for (Member member : resultList) {
+				System.out.println("member = " + member);
+			}
+
+			// List<Member> result = em.createQuery(query, Member.class).
+			// 	setFirstResult(0)
+			// 	.setMaxResults(2)
+			// 	.getResultList();
 
 			// for (Team team : result) {
 			// 	System.out.println("team = " + team.getName() + "| "+ team.getMembers().size());
@@ -379,9 +395,9 @@ public class JpaMain {
 			// 	}
 			//
 			// }
-			for (Member member : result) {
-				String name = member.getTeam().getName();
-			}
+			// for (Member member : result) {
+			// 	String name = member.getTeam().getName();
+			// }
 			// for (Member team : result) {
 				//회원1, 팀A(SQL)
 				//회원2, 팀B(1차캐시)

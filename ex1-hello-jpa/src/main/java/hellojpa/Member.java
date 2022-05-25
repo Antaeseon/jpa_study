@@ -19,6 +19,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
@@ -38,6 +39,10 @@ import java.util.Set;
 import java.util.concurrent.locks.Lock;
 
 @Entity
+@NamedQuery(
+	name = "Member.findByUsername",
+	query = "select m from Member m where m.username = :username"
+)
 public class Member extends BaseEntity{
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -167,5 +172,19 @@ public class Member extends BaseEntity{
 
 	public void setAddressHistory(List<AddressEntity> addressHistory) {
 		this.addressHistory = addressHistory;
+	}
+
+	@Override
+	public String toString() {
+		return "Member{" +
+			"id=" + id +
+			", username='" + username + '\'' +
+			", team=" + team +
+			", locker=" + locker +
+			", workPeriod=" + workPeriod +
+			", homeAddress=" + homeAddress +
+			", favoriteFoods=" + favoriteFoods +
+			", addressHistory=" + addressHistory +
+			'}';
 	}
 }
