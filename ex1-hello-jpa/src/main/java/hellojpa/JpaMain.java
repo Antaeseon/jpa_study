@@ -294,7 +294,7 @@ public class JpaMain {
 			// 	System.out.println("member = " + member);
 			// }
 
-			//Criteria 사용 준비
+			// Criteria 사용 준비
 			// CriteriaBuilder cb = em.getCriteriaBuilder();
 			// CriteriaQuery<Member> query = cb.createQuery(Member.class);
 			// Root<Member> m = query.from(Member.class);
@@ -362,6 +362,27 @@ public class JpaMain {
 
 			em.flush();
 			em.clear();
+
+			// int resultCount = em.createQuery("update Member m set m.age = 20")
+			// 	.executeUpdate();
+			// // em.clear();
+			//
+			// Member findMember = em.find(Member.class, member1.getId());
+			// System.out.println("resultCount = " + resultCount);
+			// System.out.println("findMember = " + findMember);
+			// System.out.println("member1 = " + member1.getAge());
+			// System.out.println("member2 = " + member2.getAge());
+			// System.out.println("member3 = " + member3.getAge());
+
+			String query = "select m from Member m join fetch m.team join fetch m.addressHistory";
+			List<Member> result = em.createQuery(
+				query
+				, Member.class).getResultList();
+
+			for (Member member : result) {
+				System.out.println("member = " + member);
+			}
+
 			// String query = "select t From Team t join fetch t.members m";
 			// String query = "select m From Member m join fetch m.team";
 			// String query = "select m From Member m where m.team = :team";
@@ -375,13 +396,13 @@ public class JpaMain {
 			// 	System.out.println("member = " + member);
 			// }
 
-			List<Member> resultList = em.createNamedQuery("Member.findByUsername", Member.class)
-				.setParameter("username", "member1")
-				.getResultList();
-
-			for (Member member : resultList) {
-				System.out.println("member = " + member);
-			}
+			// List<Member> resultList = em.createNamedQuery("Member.findByUsername", Member.class)
+			// 	.setParameter("username", "member1")
+			// 	.getResultList();
+			//
+			// for (Member member : resultList) {
+			// 	System.out.println("member = " + member);
+			// }
 
 			// List<Member> result = em.createQuery(query, Member.class).
 			// 	setFirstResult(0)

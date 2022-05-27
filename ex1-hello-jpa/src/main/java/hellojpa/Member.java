@@ -62,6 +62,8 @@ public class Member extends BaseEntity{
 	@JoinColumn(name = "LOCKER_ID")
 	private Locker locker;
 
+	private int age;
+
 	//기간 Period
 	@Embedded
 	private Period workPeriod;
@@ -69,12 +71,12 @@ public class Member extends BaseEntity{
 	@Embedded
 	private Address homeAddress;
 
-	@ElementCollection
-	@CollectionTable(name = "FAVORITE_FOOD",joinColumns =
-		@JoinColumn(name = "MEMBER_ID")
-	)
-	@Column(name = "FOOD_NAME")
-	private Set<String> favoriteFoods = new HashSet<>();
+	// @ElementCollection
+	// @CollectionTable(name = "FAVORITE_FOOD",joinColumns =
+	// 	@JoinColumn(name = "MEMBER_ID")
+	// )
+	// @Column(name = "FOOD_NAME")
+	// private Set<String> favoriteFoods = new HashSet<>();
 
 
 
@@ -146,14 +148,21 @@ public class Member extends BaseEntity{
 		this.homeAddress = homeAddress;
 	}
 
-	public Set<String> getFavoriteFoods() {
-		return favoriteFoods;
+	// public Set<String> getFavoriteFoods() {
+	// 	return favoriteFoods;
+	// }
+	//
+	// public void setFavoriteFoods(Set<String> favoriteFoods) {
+	// 	this.favoriteFoods = favoriteFoods;
+	// }
+
+	public int getAge() {
+		return age;
 	}
 
-	public void setFavoriteFoods(Set<String> favoriteFoods) {
-		this.favoriteFoods = favoriteFoods;
+	public void setAge(int age) {
+		this.age = age;
 	}
-
 	// public Address getHomeAddress() {
 	// 	return homeAddress;
 	// }
@@ -181,9 +190,9 @@ public class Member extends BaseEntity{
 			", username='" + username + '\'' +
 			", team=" + team +
 			", locker=" + locker +
+			", age=" + age +
 			", workPeriod=" + workPeriod +
 			", homeAddress=" + homeAddress +
-			", favoriteFoods=" + favoriteFoods +
 			", addressHistory=" + addressHistory +
 			'}';
 	}
