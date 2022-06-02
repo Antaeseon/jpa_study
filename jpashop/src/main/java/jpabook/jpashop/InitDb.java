@@ -21,7 +21,7 @@ public class InitDb {
 	private final InitService initService;
 
 	/**
-	 * 스프링 라이프사이클 때문에 이렇게 해야
+	 * 스프링 라이프사이클 때문에 이렇게 해야지만 정상적으로 적용이 된다.
 	 */
 	@PostConstruct
 	public void init() {
