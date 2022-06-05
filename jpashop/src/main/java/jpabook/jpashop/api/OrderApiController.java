@@ -19,6 +19,8 @@ import jpabook.jpashop.repository.order.query.OrderFlatDto;
 import jpabook.jpashop.repository.order.query.OrderItemQueryDto;
 import jpabook.jpashop.repository.order.query.OrderQueryDto;
 import jpabook.jpashop.repository.order.query.OrderQueryRepository;
+import jpabook.jpashop.service.query.OrderDto;
+import jpabook.jpashop.service.query.OrderQueryService;
 import lombok.Data;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -49,6 +51,9 @@ public class OrderApiController {
 			.map(OrderDto::new)
 			.collect(toList());
 	}
+
+
+	private final OrderQueryService orderQueryService;
 
 	/**
 	 * 1:다이면 다만큼 데이터가 뻥튀기가 되어 버린다.
@@ -114,50 +119,6 @@ public class OrderApiController {
 			.collect(toList());
 	}
 
-	@Data
-	static class OrderDto {
 
-		private Long orderId;
-		private String name;
-		private LocalDateTime orderDate;
-		private OrderStatus orderStatus;
-		private Address address;
-		private List<OrderItemDto> orderItems;
-
-		public OrderDto(Order order) {
-			orderId = order.getId();
-			name = order.getMember().getName();
-			orderDate = order.getOrderDate();
-			orderStatus = order.getStatus();
-			address = order.getDelivery().getAddress();
-			// order.getOrderItems().stream().forEach(o->o.getItem().getName());
-			orderItems = order.getOrderItems().stream()
-				.map(OrderItemDto::new)
-				.collect(toList());
-		}
-
-		public OrderDto(Long orderId, String name, LocalDateTime orderDate, OrderStatus orderStatus,
-			Address address, List<OrderItemDto> orderItems) {
-			this.orderId = orderId;
-			this.name = name;
-			this.orderDate = orderDate;
-			this.orderStatus = orderStatus;
-			this.address = address;
-			this.orderItems = orderItems;
-		}
-	}
-
-	@Getter
-	static class OrderItemDto {
-		private String itemName;
-		private int orderPrice;
-		private int count;
-
-		public OrderItemDto(OrderItem orderItem) {
-			itemName = orderItem.getItem().getName();
-			orderPrice = orderItem.getOrderPrice();
-			count = orderItem.getCount();
-		}
-	}
 
 }
