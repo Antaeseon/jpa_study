@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.hibernate.annotations.BatchSize;
+
 @Entity
 @Table(name = "orders")
 @Getter @Setter
@@ -26,6 +28,7 @@ public class Order {
     private Member member;
 
 
+    @BatchSize(size = 1000)
     @OneToMany(mappedBy = "order" , cascade = CascadeType.ALL)
     private List<OrderItem> orderItems = new ArrayList<>();
 

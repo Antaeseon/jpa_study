@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import jpabook.jpashop.domain.Address;
@@ -59,6 +60,31 @@ public class OrderApiController {
 			.collect(toList());
 
 	}
+
+	/**
+	 * V3에서 문제는 중복 데이터가 엄청 많아지게 된다
+	 * 쿼리는 한방에 나가지만 데이터는 정말 많이 반환이 된다.
+	 * 이렇게 사용하는 것이 더 나은 선택잃수도
+	 * 성능도 더 좋을 수도 있다.
+	 * 페이징 가능!
+	 * @param offset
+	 * @param limit
+	 * @return
+	 */
+	@GetMapping("/api/v3.1/orders")
+	public List<OrderDto> ordersV3_page(@RequestParam(value = "offset",defaultValue = "0")int offset,
+		@RequestParam(value = "limit",defaultValue = "100") int limit) {
+
+		List<Order> orders = orderRepository.findAllWithMemberDelivery(offset,limit);
+
+		List<OrderDto> result = orders.stream()
+			.map(o -> new OrderDto(o))
+			.collect(toList());
+
+		return result;
+
+	}
+
 
 	@Data
 	static class OrderDto{
