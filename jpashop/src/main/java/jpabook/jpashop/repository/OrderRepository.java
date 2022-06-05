@@ -6,9 +6,6 @@ import static jpabook.jpashop.domain.QOrder.*;
 import jpabook.jpashop.domain.Member;
 import jpabook.jpashop.domain.Order;
 import jpabook.jpashop.domain.OrderStatus;
-import jpabook.jpashop.domain.QMember;
-import jpabook.jpashop.domain.QOrder;
-import lombok.RequiredArgsConstructor;
 
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
@@ -117,7 +114,7 @@ public class OrderRepository {
 	}
 
 	private BooleanExpression nameLike(String memberName) {
-		if(StringUtils.hasText(memberName)){
+		if(!StringUtils.hasText(memberName)){
 			return null;
 		}
 
