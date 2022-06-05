@@ -15,6 +15,8 @@ import jpabook.jpashop.domain.OrderItem;
 import jpabook.jpashop.domain.OrderStatus;
 import jpabook.jpashop.repository.OrderRepository;
 import jpabook.jpashop.repository.OrderSearch;
+import jpabook.jpashop.repository.order.query.OrderFlatDto;
+import jpabook.jpashop.repository.order.query.OrderItemQueryDto;
 import jpabook.jpashop.repository.order.query.OrderQueryDto;
 import jpabook.jpashop.repository.order.query.OrderQueryRepository;
 import lombok.Data;
@@ -36,7 +38,7 @@ public class OrderApiController {
 			order.getMember().getName();
 			order.getDelivery().getAddress();
 			List<OrderItem> orderItems = order.getOrderItems();
-			orderItems.stream().forEach(o->o.getItem().getName());
+			orderItems.stream().forEach(o -> o.getItem().getName());
 		}
 		return all;
 	}
@@ -73,10 +75,10 @@ public class OrderApiController {
 	 * @return
 	 */
 	@GetMapping("/api/v3.1/orders")
-	public List<OrderDto> ordersV3_page(@RequestParam(value = "offset",defaultValue = "0")int offset,
-		@RequestParam(value = "limit",defaultValue = "100") int limit) {
+	public List<OrderDto> ordersV3_page(@RequestParam(value = "offset", defaultValue = "0") int offset,
+		@RequestParam(value = "limit", defaultValue = "100") int limit) {
 
-		List<Order> orders = orderRepository.findAllWithMemberDelivery(offset,limit);
+		List<Order> orders = orderRepository.findAllWithMemberDelivery(offset, limit);
 
 		List<OrderDto> result = orders.stream()
 			.map(o -> new OrderDto(o))
@@ -85,20 +87,35 @@ public class OrderApiController {
 		return result;
 
 	}
+
 	@GetMapping("/api/v4/orders")
-	public List<OrderQueryDto> ordersV4(){
+	public List<OrderQueryDto> ordersV4() {
 		return orderQueryRepository.findOrderQueryDtos();
 	}
 
 	@GetMapping("/api/v5/orders")
-	public List<OrderQueryDto> ordersV5(){
+	public List<OrderQueryDto> ordersV5() {
 		return orderQueryRepository.findOrderQueryDto_optimization();
 	}
 
+	@GetMapping("/api/v6/orders")
+	public List<OrderQueryDto> ordersV6() {
+		List<OrderFlatDto> flats = orderQueryRepository.findOrderQueryDto_flat();
 
+		return flats.stream()
+			.collect(groupingBy(o -> new OrderQueryDto(o.getOrderId(),
+					o.getName(), o.getOrderDate(), o.getOrderStatus(), o.getAddress()),
+				mapping(o -> new OrderItemQueryDto(o.getOrderId(),
+					o.getItemName(), o.getOrderPrice(), o.getCount()), toList())
+			)).entrySet().stream()
+			.map(e -> new OrderQueryDto(e.getKey().getOrderId(),
+				e.getKey().getName(), e.getKey().getOrderDate(), e.getKey().getOrderStatus(),
+				e.getKey().getAddress(), e.getValue()))
+			.collect(toList());
+	}
 
 	@Data
-	static class OrderDto{
+	static class OrderDto {
 
 		private Long orderId;
 		private String name;
@@ -118,10 +135,20 @@ public class OrderApiController {
 				.map(OrderItemDto::new)
 				.collect(toList());
 		}
+
+		public OrderDto(Long orderId, String name, LocalDateTime orderDate, OrderStatus orderStatus,
+			Address address, List<OrderItemDto> orderItems) {
+			this.orderId = orderId;
+			this.name = name;
+			this.orderDate = orderDate;
+			this.orderStatus = orderStatus;
+			this.address = address;
+			this.orderItems = orderItems;
+		}
 	}
 
 	@Getter
-	static class OrderItemDto{
+	static class OrderItemDto {
 		private String itemName;
 		private int orderPrice;
 		private int count;
@@ -132,6 +159,5 @@ public class OrderApiController {
 			count = orderItem.getCount();
 		}
 	}
-
 
 }
