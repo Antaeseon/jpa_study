@@ -46,6 +46,20 @@ public class OrderApiController {
 			.collect(toList());
 	}
 
+	/**
+	 * 1:다이면 다만큼 데이터가 뻥튀기가 되어 버린다.
+	 * 의도한 것과 다른 결과값이 나타난다.
+	 * @return
+	 */
+	@GetMapping("/api/v3/orders")
+	public List<OrderDto> ordersV3() {
+		return orderRepository.findAllWithItem()
+			.stream()
+			.map(OrderDto::new)
+			.collect(toList());
+
+	}
+
 	@Data
 	static class OrderDto{
 
