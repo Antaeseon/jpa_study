@@ -7,6 +7,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQuery;
 
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -18,6 +19,9 @@ import lombok.ToString;
 @Getter @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString(of = {"id","username","age"}) // team까지 적게 되면 무한루프를 돌 수 있기 때문에 이렇게 설정한다.
+@NamedQuery(
+	name="Member.findByUsername",
+	query="select m from Member m where m.username = :username")
 public class Member {
 
 	@Id @GeneratedValue
