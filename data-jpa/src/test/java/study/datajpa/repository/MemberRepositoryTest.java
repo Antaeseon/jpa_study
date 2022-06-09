@@ -8,9 +8,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.Sort;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,6 +34,11 @@ class MemberRepositoryTest {
 	MemberRepository memberRepository;
 	@Autowired
 	TeamRepository teamRepository;
+
+	@PersistenceContext
+	EntityManager em;
+
+
 
 	@Test
 	public void testMember() {
@@ -172,5 +184,76 @@ class MemberRepositoryTest {
 		Optional<Member> aaa = memberRepository.findOptionalByUsername("AAA");
 		System.out.println("aaa = " + aaa);
 	}
+
+
+	@Test
+	public void paging() {
+
+		//given
+		memberRepository.save(new Member("member1", 10));
+		memberRepository.save(new Member("member2", 10));
+		memberRepository.save(new Member("member3", 10));
+		memberRepository.save(new Member("member4", 10));
+		memberRepository.save(new Member("member5", 10));
+
+		int age=10;
+		//부모 인터페이스에 Pageable 존재
+		PageRequest pageRequest = PageRequest.of(0, 3, Sort.by(Sort.Direction.DESC, "username"));
+
+		//offset이 0이면 굳이 쿼리로 시작 지점이 나가지 않는다!
+
+		//when
+		//totalQuery까지 알아서 다 날려준다!!
+		//totalElements를 그래서 얻는 것이 가능하다.
+		// Page<Member> page = memberRepository.findByAge(age, pageRequest);
+
+		//Slice는 total을 가져오지 않는다.
+		//Slice는 Page에서 카운트 쿼리에 많은 비용이 발생하는 경우에 Slice를 사용
+		Page<Member> page = memberRepository.findByAge(age, pageRequest);
+
+		//쉽게 변환
+		//API로 바로 반환하는 것이 좋은 점 있다!!
+		Page<MemberDto> toMap = page.map(m -> new MemberDto(m.getId(), m.getUsername(), null));
+
+
+		//then
+		List<Member> content = page.getContent();
+		// long totalElements = page.getTotalElements();
+
+
+		assertThat(content.size()).isEqualTo(3);
+		assertThat(page.getTotalElements()).isEqualTo(5);
+		assertThat(page.getNumber()).isEqualTo(0);
+		assertThat(page.getTotalPages()).isEqualTo(2);
+		assertThat(page.isFirst()).isTrue();
+		assertThat(page.hasNext()).isTrue();
+	}
+
+	/*
+	bulkUpdate는 조심할 필요!
+	영속성 컨텍스트를 무시하고 바로 db에 쿼리를 날리기 때문에 위험하다
+	 */
+	@Test
+	public void bulkUpdate() {
+		//given
+		memberRepository.save(new Member("member1", 10));
+		memberRepository.save(new Member("member2", 19));
+		memberRepository.save(new Member("member3", 20));
+		memberRepository.save(new Member("member4", 21));
+		memberRepository.save(new Member("member5", 40));
+
+		//when
+		int resultCount = memberRepository.bulkAgePlus(20);
+		// em.clear();
+
+
+		List<Member> result = memberRepository.findByUsername("member5");
+		Member findMember = result.get(0);
+		System.out.println("findMember = " + findMember);
+		//then
+		assertThat(resultCount).isEqualTo(3);
+
+	}
+
 
 }
