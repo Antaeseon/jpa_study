@@ -5,14 +5,18 @@ import java.util.List;
 import java.util.Optional;
 
 import javax.persistence.Entity;
+import javax.persistence.LockModeType;
+import javax.persistence.QueryHint;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.QueryHints;
 import org.springframework.data.repository.query.Param;
 
 import study.datajpa.dto.MemberDto;
@@ -52,7 +56,8 @@ public interface MemberRepository extends JpaRepository<Member,Long> {
 	// @Query(value = "select m from Member m left join m.team t",countQuery = "select count(m.username) from Member m")
 	Page<Member> findByAge(int age, Pageable pageable);
 
-	@Modifying(clearAutomatically = true) //반드시 넣어 주어야 한다!! executeUpdate를 하는 역할
+	// @Modifying(clearAutomatically = true) //반드시 넣어 주어야 한다!! executeUpdate를 하는 역할
+	@Modifying //반드시 넣어 주어야 한다!! executeUpdate를 하는 역할
 	@Query("update Member m set m.age = m.age +1 where m.age>= :age")
 	int bulkAgePlus(@Param("age") int age);
 
@@ -70,6 +75,12 @@ public interface MemberRepository extends JpaRepository<Member,Long> {
 	// @EntityGraph(attributePaths = ("team"))
 	@EntityGraph("Member.all")
 	List<Member> findEntityGraphByUsername(@Param("username") String username);
+
+	@QueryHints(value = @QueryHint(name = "org.hibernate.readOnly",value = "true"))
+	Member findReadOnlyByUsername(String username);
+
+	@Lock(LockModeType.PESSIMISTIC_WRITE)
+	List<Member> findLockByUsername(String username);
 
 
 }

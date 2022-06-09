@@ -247,8 +247,10 @@ class MemberRepositoryTest {
 		// em.clear();
 
 
+
 		List<Member> result = memberRepository.findByUsername("member5");
 		Member findMember = result.get(0);
+		findMember.setAge(findMember.getAge()-1);
 		System.out.println("findMember = " + findMember);
 		//then
 		assertThat(resultCount).isEqualTo(3);
@@ -287,4 +289,34 @@ class MemberRepositoryTest {
 			System.out.println("member.team = " + member.getTeam().getName());
 		}
 	}
+
+	@Test
+	public void queryHint() {
+		Member member1 = new Member("member1", 10);
+		memberRepository.save(member1);
+		em.flush();
+		em.clear();
+
+		//when
+		// Member findMember = memberRepository.findById(member1.getId()).get();
+		Member findMember = memberRepository.findReadOnlyByUsername("member1"); //read only는 변경 감지를 하지 안흔다.
+		findMember.setUsername("member2");
+
+		em.flush();
+	}
+
+	@Test
+	public void lock() {
+		Member member1 = new Member("member1", 10);
+		memberRepository.save(member1);
+		em.flush();
+		em.clear();
+
+		//when
+		// Member findMember = memberRepository.findById(member1.getId()).get();
+		List<Member> result = memberRepository.findLockByUsername("member1");//read only는 변경 감지를 하지 안흔다.
+	}
+
+
+
 }
