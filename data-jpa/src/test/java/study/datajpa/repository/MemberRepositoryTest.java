@@ -300,7 +300,7 @@ class MemberRepositoryTest {
 		//when
 		// Member findMember = memberRepository.findById(member1.getId()).get();
 		Member findMember = memberRepository.findReadOnlyByUsername("member1"); //read only는 변경 감지를 하지 안흔다.
-		findMember.setUsername("member2");
+		findMember.setUsername("member2"); //변화 없다 ( query 생성되지 않음 )
 
 		em.flush();
 	}
@@ -314,9 +314,15 @@ class MemberRepositoryTest {
 
 		//when
 		// Member findMember = memberRepository.findById(member1.getId()).get();
-		List<Member> result = memberRepository.findLockByUsername("member1");//read only는 변경 감지를 하지 안흔다.
+		List<Member> result = memberRepository.findLockByUsername("member1");
 	}
 
+
+
+	@Test
+	public void callCustom() {
+		List<Member> result = memberRepository.findMemberCustom();
+	}
 
 
 }
