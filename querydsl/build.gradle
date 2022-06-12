@@ -37,12 +37,14 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
-//querydsl 추가 시작
+
+//querydsl 추가 시작!!!
 def querydslDir = "$buildDir/generated/querydsl"
 querydsl {
     jpa = true
     querydslSourcesDir = querydslDir
 }
+//인텔리제이같은 ide가 소스 폴더에 자동으로 임포트
 sourceSets {
     main.java.srcDir querydslDir
 }
