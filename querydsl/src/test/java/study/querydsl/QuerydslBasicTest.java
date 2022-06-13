@@ -1,6 +1,7 @@
 package study.querydsl;
 
 import static org.assertj.core.api.Assertions.*;
+import static study.querydsl.entity.QMember.*;
 
 import java.util.List;
 
@@ -65,12 +66,17 @@ public class QuerydslBasicTest {
 	@Test
 	public void startQuerydsl() {
 
-		QMember m = new QMember("m");
+		//같은 테이블을 조인할 경우만 이런식으로 선언해서 사용
+		// QMember m = new QMember("m");
+		// QMember m = QMember.member;
 
+
+		//static member로 변경 => 이 방식을 권장
+		//jpql의 alias는 member1으로 나감
 		Member findMember = queryFactory
-			.select(m)
-			.from(m)
-			.where(m.username.eq("member1")) //파라미터 바인딩 처리
+			.select(member)
+			.from(member)
+			.where(member.username.eq("member1")) //파라미터 바인딩 처리
 			.fetchOne();
 		assertThat(findMember.getUsername()).isEqualTo("member1");
 
