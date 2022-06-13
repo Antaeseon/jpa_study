@@ -52,14 +52,14 @@ public class Member extends BaseEntity{
 	@Column(name = "USER_NAME")
 	private String username;
 
-	@ManyToOne(fetch = FetchType.LAZY) // 지연 로딩 이용 프록시
-	// @ManyToOne(fetch = FetchType.EAGER) // 즉시 로딩 ( 실무에서는 사용하면 안된다 )
-	// @JoinColumn(name = "TEAM_ID", insertable = false, updatable = false) // 읽기 전용으로 처리를 해버린다.
-	@JoinColumn(name = "TEAM_ID")
-	private Team team;
+	// @ManyToOne(fetch = FetchType.LAZY) // 지연 로딩 이용 프록시
+	// // @ManyToOne(fetch = FetchType.EAGER) // 즉시 로딩 ( 실무에서는 사용하면 안된다 )
+	// // @JoinColumn(name = "TEAM_ID", insertable = false, updatable = false) // 읽기 전용으로 처리를 해버린다.
+	// @JoinColumn(name = "TEAM_ID")
+	// private Team team;
 
-	@OneToOne
-	@JoinColumn(name = "LOCKER_ID")
+	@OneToOne(mappedBy = "member",fetch = FetchType.LAZY)
+	// @JoinColumn(name = "LOCKER_ID")
 	private Locker locker;
 
 	private int age;
@@ -124,17 +124,17 @@ public class Member extends BaseEntity{
 		this.username = username;
 	}
 
-	public Team getTeam() {
-		return team;
-	}
-
-	public void setTeam(Team team) {
-		this.team = team;
-
-		if(!team.getMembers().contains(this)){
-			team.getMembers().add(this);
-		}
-	}
+	// public Team getTeam() {
+	// 	return team;
+	// }
+	//
+	// public void setTeam(Team team) {
+	// 	this.team = team;
+	//
+	// 	if(!team.getMembers().contains(this)){
+	// 		team.getMembers().add(this);
+	// 	}
+	// }
 
 	public Period getWorkPeriod() {
 		return workPeriod;
@@ -192,7 +192,7 @@ public class Member extends BaseEntity{
 		return "Member{" +
 			"id=" + id +
 			", username='" + username + '\'' +
-			", team=" + team +
+			// ", team=" + team +
 			", locker=" + locker +
 			", age=" + age +
 			", workPeriod=" + workPeriod +

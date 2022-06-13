@@ -429,7 +429,35 @@ public class JpaMain {
 
 
 
+			// Member member1 = new Member();
+			// member1.setUsername("member1");
+			// Member member2 = new Member();
+			// member2.setUsername("member2");
+			//
+			// Team team1 = new Team();
+			// team1.setName("team1");
+			// team1.getMembers().add(member1);
+			// team1.getMembers().add(member2);
+			//
+			// em.persist(member1);
+			// em.persist(member2);
+			// em.persist(team1);
 
+			Member member = new Member();
+			member.setUsername("member");
+			em.persist(member);
+
+
+			Locker locker = new Locker();
+			locker.setName("locker");
+			locker.setMember(member);
+			em.persist(locker);
+
+			em.flush();
+			em.clear();
+
+			Member member1 = em.find(Member.class, member.getId());
+			System.out.println(member1.getUsername());
 
 			tx.commit();
 		} catch (Exception e) {
@@ -452,8 +480,8 @@ public class JpaMain {
 		String username = member.getUsername();
 		System.out.println("username = " + username);
 
-		Team team = member.getTeam();
-		System.out.println("team = " + team.getName());
+		// Team team = member.getTeam();
+		// System.out.println("team = " + team.getName());
 	}
 
 	private static Member saveMember(EntityManager em) {
