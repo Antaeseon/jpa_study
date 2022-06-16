@@ -179,6 +179,7 @@ public class QuerydslBasicTest {
 			.offset(1)
 			.limit(2)
 			.fetch();
+
 		assertThat(result.size()).isEqualTo(2);
 	}
 
@@ -275,11 +276,16 @@ public class QuerydslBasicTest {
 		em.persist(new Member("teamB"));
 		em.persist(new Member("teamC"));
 
+		//서로 연관관계가 없는 테이블에 대해 조인을 할 때 사용
 		List<Member> result = queryFactory
 			.select(member)
 			.from(member, team)
 			.where(member.username.eq(team.name))
 			.fetch();
+
+		for (Member member1 : result) {
+			System.out.println("member1 = " + member1);
+		}
 
 		assertThat(result)
 			.extracting("username")
@@ -487,5 +493,36 @@ public class QuerydslBasicTest {
 			System.out.println("s = " + s);
 		}
 	}
+
+	@Test
+	public void simpleProjection() throws Exception {
+		List<String> result = queryFactory
+			.select(member.username)
+			.from(member)
+			.fetch();
+		for (String s : result) {
+			System.out.println("s = " + s);
+		}
+	}
+
+
+	@Test
+	public void tupleProjection() throws Exception {
+
+		//tuple은 repository정도에서만 사용하고 밖으로 던지는 것은 사용하지 말아야 한다.
+		//밖으로 나갈 떼는 Dto로 변환 되도록!!!
+		List<Tuple> result = queryFactory
+			.select(member.username, member.age)
+			.from(member)
+			.fetch();
+
+		for (Tuple tuple : result) {
+			String username = tuple.get(member.username);
+			Integer age = tuple.get(member.age);
+			System.out.println("username = " + username);
+			System.out.println("age = " + age);
+		}
+	}
+
 
 }

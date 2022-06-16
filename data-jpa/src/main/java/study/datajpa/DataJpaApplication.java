@@ -19,6 +19,8 @@ public class DataJpaApplication {
 	}
 
 
+
+	//실무에서는 세션 정보나 스프링 시큐리티 로그인 정보에서 ID를 받는다
 	@Bean
 	public AuditorAware<String> auditorProvider() {
 		return () -> Optional.of(UUID.randomUUID().toString());

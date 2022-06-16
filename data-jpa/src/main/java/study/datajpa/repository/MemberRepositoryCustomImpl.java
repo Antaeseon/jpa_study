@@ -12,7 +12,7 @@ import study.datajpa.entity.Member;
  * MemberRepositoryCustom는 상관 없다
  */
 @RequiredArgsConstructor
-public class MemberRepositoryImpl implements MemberRepositoryCustom{
+public class MemberRepositoryCustomImpl implements MemberRepositoryCustom{
 
 	private final EntityManager em;
 

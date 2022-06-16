@@ -179,7 +179,7 @@ class MemberRepositoryTest {
 	@Test
 	public void returnType() {
 		Member m1 = new Member("AAA", 10);
-		Member m2 = new Member("AAA", 20);
+		Member m2 = new Member("BBB", 20);
 		memberRepository.save(m1);
 		memberRepository.save(m2);
 
@@ -248,6 +248,7 @@ class MemberRepositoryTest {
 
 		//when
 		int resultCount = memberRepository.bulkAgePlus(20);
+		//@Modifying(clearAutomatically = true) 있으면 안해줘도 된다!!
 		// em.clear();
 
 
@@ -316,8 +317,12 @@ class MemberRepositoryTest {
 		em.flush();
 		em.clear();
 
+
+		//for update문이 붙게 된다.
+
 		//when
 		// Member findMember = memberRepository.findById(member1.getId()).get();
+
 		List<Member> result = memberRepository.findLockByUsername("member1");
 	}
 
