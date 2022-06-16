@@ -50,16 +50,5 @@ class QuerydslApplicationTests {
 
 	}
 
-	@Test
-	public void findDtoByJPQL() throws Exception {
-		List<MemberDto> resultList = em.createQuery(
-			"select new study.querydsl.dto.MemberDto(m.username,m.age) from Member m", MemberDto.class)
-			.getResultList();
-		for (MemberDto memberDto : resultList) {
-			System.out.println("memberDto = " + memberDto);
-		}
-	}
-
-
 
 }
