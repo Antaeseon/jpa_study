@@ -443,21 +443,25 @@ public class JpaMain {
 			// em.persist(member2);
 			// em.persist(team1);
 
-			Member member = new Member();
-			member.setUsername("member");
-			em.persist(member);
+			// Member member = new Member();
+			// member.setUsername("member");
+			// em.persist(member);
+			//
+			//
+			// Locker locker = new Locker();
+			// locker.setName("locker");
+			// locker.setMember(member);
+			// em.persist(locker);
+			//
+			// em.flush();
+			// em.clear();
+			//
+			// Member member1 = em.find(Member.class, member.getId());
+			// System.out.println(member1.getUsername());
 
-
-			Locker locker = new Locker();
-			locker.setName("locker");
-			locker.setMember(member);
-			em.persist(locker);
-
-			em.flush();
-			em.clear();
-
-			Member member1 = em.find(Member.class, member.getId());
-			System.out.println(member1.getUsername());
+			Movie movie = new Movie();
+			movie.setPrice(10000);
+			em.persist(movie);
 
 			tx.commit();
 		} catch (Exception e) {
