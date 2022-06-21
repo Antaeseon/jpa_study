@@ -768,4 +768,6 @@ public class QuerydslBasicTest {
 		}
 	}
 
+
+
 }
