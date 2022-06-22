@@ -30,6 +30,7 @@ import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.CaseBuilder;
 import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
@@ -165,6 +166,8 @@ public class QuerydslBasicTest {
 		em.persist(new Member("member5", 100));
 		em.persist(new Member("member6", 100));
 
+
+
 		List<Member> result = queryFactory
 			.selectFrom(member)
 			.where(member.age.eq(100))
@@ -188,7 +191,6 @@ public class QuerydslBasicTest {
 			.offset(1)
 			.limit(2)
 			.fetch();
-
 		assertThat(result.size()).isEqualTo(2);
 	}
 
@@ -258,6 +260,7 @@ public class QuerydslBasicTest {
 
 	/**
 	 * 팀 A에 소속된 모든 회원
+	 * join(조인 대상, 별칭으로 사용할 Q타입)
 	 */
 	@Test
 	public void join() {
@@ -276,6 +279,7 @@ public class QuerydslBasicTest {
 	/**
 	 * 세타 조인
 	 * 회원의 이름이 팀 이름과 같은 회원 조회
+	 * 테이블 A와 B를 조건 없이 모두 매칭한 결과 (Cross Join)
 	 */
 	@Test
 	public void theta_join() {
@@ -317,11 +321,14 @@ public class QuerydslBasicTest {
 		for (Tuple tuple : result) {
 			System.out.println("tuple = " + tuple);
 		}
+
+
 	}
 
 	/**
 	 * 연관관계가 없는 엔티티 외부 조인
 	 * 회원의 이름이 팀 이름과 같은 대상 외부 조인
+	 * sql 확인해보면 id 비교가 존재하지 않는다.
 	 */
 	@Test
 	public void join_on_no_relation() {
@@ -473,6 +480,34 @@ public class QuerydslBasicTest {
 		}
 	}
 
+	/*
+	임의의 순서대로 회원 출력하고 싶은 경우
+	1. 0~30이 아닌 회원
+	2. 0~20 회원
+	3. 21~30 회원
+	 */
+	@Test
+	public void orderCase() {
+		NumberExpression<Integer> rankPath = new CaseBuilder()
+			.when(member.age.between(0, 20)).then(2)
+			.when(member.age.between(21, 30)).then(1)
+			.otherwise(3);
+
+		List<Tuple> result = queryFactory
+			.select(member.username, member.age, rankPath)
+			.from(member)
+			.orderBy(rankPath.desc())
+			.fetch();
+
+		for (Tuple tuple : result) {
+			String username = tuple.get(member.username);
+			Integer age = tuple.get(member.age);
+			Integer rank = tuple.get(rankPath);
+			System.out.println("username = "+username + " age = "+age+ " rank = "+rank);
+		}
+
+	}
+
 	@Test
 	public void constant() {
 		List<Tuple> result = queryFactory
@@ -509,6 +544,8 @@ public class QuerydslBasicTest {
 			System.out.println("s = " + s);
 		}
 	}
+
+
 
 	@Test
 	public void tupleProjection() throws Exception {
