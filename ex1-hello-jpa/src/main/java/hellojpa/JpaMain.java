@@ -24,7 +24,7 @@ public class JpaMain {
 
 		EntityTransaction tx = em.getTransaction();
 		//단순 데이터 조회는 트랜잭션 없어도 된다
-		tx.begin();
+		tx.begin(
 
 		try {
 
